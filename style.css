@@ -1,0 +1,161 @@
+/* Cafe BeReal Style CSS */
+body {
+    background-color: #f9f7f2; /* Light beige */
+    color: #4a3f35; /* Warm dark brown */
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    margin: 0;
+    padding: 20px;
+    line-height: 1.6;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+header h1 {
+    font-size: 2rem;
+    letter-spacing: 0.1em;
+}
+
+main {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Common Card Style *//* ===== Latest Post 強化（画像を目立たせる） ===== */
+section#latest-post img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: 15px;
+}
+
+/* ===== ホバーで浮くアニメーション ===== */
+article {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+article:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+}
+
+/* ===== フォーム整列改善 ===== */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+article, section#post-form {
+    background-color: #ffffff;
+    border-radius: 20px;
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* Post Form */
+section#post-form h2 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #8c7851;
+}
+
+form div {
+    margin-bottom: 15px;
+}
+
+input[type="text"], textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #e0d8c3;
+    border-radius: 10px;
+    box-sizing: border-box;
+    background-color: #fffaf0;
+}
+
+button {
+    background-color: #8c7851;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #6d5d3e;
+}
+
+/* Latest Post (Large Card) */
+section#latest-post h2 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+}
+
+section#latest-post article {
+    padding: 15px;
+}
+
+section#latest-post img {
+    border-radius: 15px;
+    margin-bottom: 15px;
+    display: block;
+}
+
+/* Past Posts Grid */
+section#past-posts h2 {
+    margin-top: 50px;
+}
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+section#past-posts article {
+    padding: 10px;
+    margin-bottom: 0;
+}
+
+section#past-posts img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+section#past-posts h4 {
+    margin: 10px 0 5px;
+    font-size: 1rem;
+}
+
+section#past-posts p {
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+    .post-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #e0d8c3;
+    margin: 40px 0;
+}
+
+footer {
+    text-align: center;
+    padding: 40px 0;
+    font-size: 0.8rem;
+    color: #a0937d;
+}

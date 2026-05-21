@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>料理日記 - BeReal Style</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <header>
+        <h1>料理日記</h1>
+    </header>
+
+    <main>
+
+        <!-- 投稿フォーム -->
+        <section id="post-form">
+            <h2>新しい料理を記録する</h2>
+
+            <form id="postForm" action="#" method="post">
+
+                <div>
+                    <label for="image">写真：</label>
+                    <input type="file" id="image" name="image" accept="image/*" required>
+                </div>
+
+                <div>
+                    <label for="dish-name">料理名：</label>
+                    <input type="text" id="dish-name" name="dish-name" placeholder="例：肉じゃが" required>
+                </div>
+
+                <div>
+                    <label for="feedback">感想：</label><br>
+                    <textarea id="feedback" name="feedback" rows="3" placeholder="味やコツなど"></textarea>
+                </div>
+
+                <button type="submit" id="submitBtn">投稿する</button>
+
+            </form>
+        </section>
+
+        <hr>
+
+        <!-- 最新投稿 -->
+        <section id="latest-post">
+            <h2>最新の投稿</h2>
+            <article>
+                <!-- JSで動的に挿入されます -->
+            </article>
+        </section>
+
+        <hr>
+
+        <!-- 過去投稿グリッド -->
+        <section id="past-posts">
+            <h2>過去の投稿</h2>
+            <div class="post-grid">
+                <!-- JSで動的に挿入されます -->
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 料理日記</p>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
