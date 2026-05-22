@@ -26,28 +26,37 @@ let posts = JSON.parse(localStorage.getItem("posts")) || [
 ];
 
 
-// 編集用（どの投稿を編集してるか）
-let editId = null;
+// ==========================
+// 編集状態管理
+// ==========================
+let editingId = null;
 
 
 // ==========================
 // DOM取得
 // ==========================
-const postForm = document.getElementById('postForm');
-const latestPostSection = document.getElementById('latest-post');
-const postGrid = document.querySelector('.post-grid');
+const postForm = document.getElementById("postForm");
+const postGrid = document.querySelector(".post-grid");
+const latestPostSection = document.getElementById("latest-post");
+
+// モーダル
+const modal = document.getElementById("editModal");
+const editDishName = document.getElementById("editDishName");
+const editFeedback = document.getElementById("editFeedback");
+const saveEditBtn = document.getElementById("saveEditBtn");
+const closeModalBtn = document.getElementById("closeModalBtn");
 
 
 // ==========================
-// 投稿表示
+// 表示更新
 // ==========================
 function renderPosts() {
-    postGrid.innerHTML = '';
+    postGrid.innerHTML = "";
 
     const pastPosts = posts.slice(0, -1).reverse();
 
     pastPosts.forEach(post => {
-        const article = document.createElement('article');
+        const article = document.createElement("article");
 
         article.innerHTML = `
             <img src="${post.image}" alt="${post.dishName}">
@@ -64,11 +73,11 @@ function renderPosts() {
 
     const latest = posts[posts.length - 1];
     if (latest) {
-        latestPostSection.querySelector('article').innerHTML = `
+        latestPostSection.querySelector("article").innerHTML = `
             <img src="${latest.image}" alt="${latest.dishName}" width="100%">
             <h3>今日の料理：${latest.dishName}</h3>
             <p><strong>感想：</strong> ${latest.feedback}</p>
-            <p><small>投稿日：${latest.date}</small></p>
+            <p><small>${latest.date}</small></p>
         `;
     }
 }
@@ -78,9 +87,9 @@ function renderPosts() {
 // 投稿作成（画像なし対応）
 // ==========================
 function createPost(imageData) {
-    const dishName = document.getElementById('dish-name').value;
-    const feedback = document.getElementById('feedback').value;
-    const date = new Date().toLocaleDateString('ja-JP');
+    const dishName = document.getElementById("dish-name").value;
+    const feedback = document.getElementById("feedback").value;
+    const date = new Date().toLocaleDateString("ja-JP");
 
     const newPost = {
         id: Date.now(),
@@ -99,58 +108,23 @@ function createPost(imageData) {
 
 
 // ==========================
-// フォーム送信（新規 or 編集）
+// 投稿送信
 // ==========================
-postForm.addEventListener('submit', function(e) {
+postForm.addEventListener("submit", function (e) {
     e.preventDefault();
 
-    const imageFile = document.getElementById('image').files[0];
-
-    const savePost = (imageData) => {
-        const dishName = document.getElementById('dish-name').value;
-        const feedback = document.getElementById('feedback').value;
-
-        if (editId !== null) {
-            // 編集モード
-            const index = posts.findIndex(p => p.id === editId);
-
-            if (index !== -1) {
-                posts[index].dishName = dishName;
-                posts[index].feedback = feedback;
-                posts[index].image = imageData;
-            }
-
-            editId = null;
-
-        } else {
-            // 新規投稿
-            const newPost = {
-                id: Date.now(),
-                image: imageData,
-                dishName,
-                feedback,
-                date: new Date().toLocaleDateString('ja-JP')
-            };
-
-            posts.push(newPost);
-        }
-
-        localStorage.setItem("posts", JSON.stringify(posts));
-        renderPosts();
-        postForm.reset();
-    };
+    const imageFile = document.getElementById("image").files[0];
 
     if (imageFile) {
         const reader = new FileReader();
 
-        reader.onload = function(event) {
-            savePost(event.target.result);
+        reader.onload = function (event) {
+            createPost(event.target.result);
         };
 
         reader.readAsDataURL(imageFile);
-
     } else {
-        savePost("https://via.placeholder.com/200");
+        createPost("https://via.placeholder.com/200");
     }
 });
 
@@ -160,27 +134,52 @@ postForm.addEventListener('submit', function(e) {
 // ==========================
 function deletePost(id) {
     posts = posts.filter(post => post.id !== id);
-
     localStorage.setItem("posts", JSON.stringify(posts));
     renderPosts();
 }
 
 
 // ==========================
-// 編集開始
+// 編集開始（モーダル表示）
 // ==========================
 function startEdit(id) {
     const post = posts.find(p => p.id === id);
     if (!post) return;
 
-    editId = id;
+    editingId = id;
 
-    document.getElementById('dish-name').value = post.dishName;
-    document.getElementById('feedback').value = post.feedback;
+    editDishName.value = post.dishName;
+    editFeedback.value = post.feedback;
 
-    // 画像はリセット（再選択方式）
-    document.getElementById('image').value = '';
+    modal.style.display = "flex";
 }
+
+
+// ==========================
+// 編集保存
+// ==========================
+saveEditBtn.addEventListener("click", () => {
+    const post = posts.find(p => p.id === editingId);
+    if (!post) return;
+
+    post.dishName = editDishName.value;
+    post.feedback = editFeedback.value;
+
+    localStorage.setItem("posts", JSON.stringify(posts));
+
+    renderPosts();
+    modal.style.display = "none";
+    editingId = null;
+});
+
+
+// ==========================
+// モーダル閉じる
+// ==========================
+closeModalBtn.addEventListener("click", () => {
+    modal.style.display = "none";
+    editingId = null;
+});
 
 
 // ==========================

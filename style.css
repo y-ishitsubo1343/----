@@ -159,3 +159,37 @@ footer {
     font-size: 0.8rem;
     color: #a0937d;
 }
+/* ===== モーダル背景 ===== */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4);
+    justify-content: center;
+    align-items: center;
+}
+
+/* ===== モーダル中身 ===== */
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 15px;
+    width: 300px;
+}
+
+/* ボタン */
+.modal-buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+
+.modal input,
+.modal textarea {
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 8px;
+}
