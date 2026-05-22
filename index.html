@@ -8,69 +8,67 @@
 </head>
 
 <body>
-    <header>
-        <h1>料理日記</h1>
-    </header>
 
-    <main>
+<header>
+    <h1>料理日記</h1>
+</header>
 
-        <!-- 投稿フォーム -->
-        <section id="post-form">
-            <h2>新しい料理を記録する</h2>
+<main>
 
-            <form id="postForm" action="#" method="post">
+    <!-- 投稿フォーム -->
+    <section id="post-form">
+        <h2>新しい料理を記録する</h2>
 
-                <div>
-                    <label for="image">写真：</label>
-                    <input type="file" id="image" name="image" accept="image/*" required>
-                </div>
+        <form id="postForm">
 
-                <div>
-                    <label for="dish-name">料理名：</label>
-                    <input type="text" id="dish-name" name="dish-name" placeholder="例：肉じゃが" required>
-                </div>
-
-                <div>
-                    <label for="feedback">感想：</label><br>
-                    <textarea id="feedback" name="feedback" rows="3" placeholder="味やコツなど"></textarea>
-                </div>
-
-                <button type="submit" id="submitBtn">投稿する</button>
-
-            </form>
-        </section>
-
-        <hr>
-
-        <!-- 最新投稿 -->
-        <section id="latest-post">
-            <h2>最新の投稿</h2>
-            <article>
-                <!-- JSで動的に挿入されます -->
-            </article>
-        </section>
-
-        <hr>
-
-        <!-- 過去投稿グリッド -->
-        <section id="past-posts">
-            <h2>過去の投稿</h2>
-            <div class="post-grid">
-                <!-- JSで動的に挿入されます -->
+            <div>
+                <label for="image">写真：</label>
+                <input type="file" id="image" accept="image/*">
             </div>
-        </section>
 
-    </main>
+            <div>
+                <label for="dish-name">料理名：</label>
+                <input type="text" id="dish-name" placeholder="例：肉じゃが" required>
+            </div>
 
-    <footer>
-        <p>&copy; 2026 料理日記</p>
-    </footer>
+            <div>
+                <label for="feedback">感想：</label>
+                <textarea id="feedback" rows="3" placeholder="味やコツなど"></textarea>
+            </div>
 
-    <script src="script.js"></script>
-</body>
-</html>
-<!-- 編集モーダル -->
+            <button type="submit" id="submitBtn">投稿する</button>
+
+        </form>
+    </section>
+
+    <hr>
+
+    <!-- 最新投稿 -->
+    <section id="latest-post">
+        <h2>最新の投稿</h2>
+        <article></article>
+    </section>
+
+    <hr>
+
+    <!-- 過去投稿 -->
+    <section id="past-posts">
+        <h2>過去の投稿</h2>
+        <div class="post-grid"></div>
+    </section>
+
+</main>
+
+<footer>
+    <p>&copy; 2026 料理日記</p>
+</footer>
+
+
+<!-- =========================
+     編集モーダル（ここが正解位置）
+========================= -->
 <div id="editModal" class="modal">
+
     <div class="modal-content">
 
         <h2>料理を編集</h2>
@@ -84,4 +82,11 @@
         </div>
 
     </div>
+
 </div>
+
+
+<script src="script.js"></script>
+
+</body>
+</html>
