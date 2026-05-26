@@ -1,195 +1,346 @@
-/* Cafe BeReal Style CSS */
+/* Modern Clean Beige Mode with Handwritten Font CSS */
+@import url('https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&display=swap');
+
+:root {
+    --bg-color: #f5f2eb; /* Warm light beige */
+    --card-bg: #ffffff;
+    --text-primary: #4a453e; /* Warm dark brown-grey */
+    --text-secondary: #8c8378; /* Soft warm grey */
+    --accent-color: #a68b6a; /* Earthy tan/gold accent */
+    --border-radius: 12px;
+    --shadow: 0 4px 20px rgba(74, 69, 62, 0.05); /* Softer, warmer shadow */
+    --shadow-hover: 0 8px 30px rgba(74, 69, 62, 0.1);
+}
+
 body {
-    background-color: #f9f7f2; /* Light beige */
-    color: #4a3f35; /* Warm dark brown */
-    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-primary);
+    font-family: 'Kiwi Maru', serif;
     margin: 0;
-    padding: 20px;
+    padding: 0;
     line-height: 1.6;
 }
 
 header {
+    padding: 30px 20px;
     text-align: center;
-    margin-bottom: 40px;
+    background-color: var(--card-bg);
+    border-bottom: 1px solid #e8e3d9;
+    margin-bottom: 30px;
 }
 
 header h1 {
-    font-size: 2rem;
-    letter-spacing: 0.1em;
+    margin: 0;
+    font-size: 1.8rem;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
 }
 
-main {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-/* Common Card Style *//* ===== Latest Post 強化（画像を目立たせる） ===== */
-section#latest-post img {
-    width: 100%;
-    height: 300px;
-    object-fit: cover;
-    border-radius: 15px;
-}
-
-/* ===== ホバーで浮くアニメーション ===== */
-article {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-article:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-}
-
-/* ===== フォーム整列改善 ===== */
-form {
+.dashboard {
     display: flex;
-    flex-direction: column;
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+    align-items: flex-start;
+}
+
+.left-panel {
+    flex: 1;
+    min-width: 0;
+}
+
+.right-panel {
+    width: 360px;
+    position: sticky;
+    top: 30px;
+}
+
+/* Tabs */
+.tabs {
+    display: flex;
     gap: 10px;
-}
-article, section#post-form {
-    background-color: #ffffff;
-    border-radius: 20px;
-    padding: 25px;
-    margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-}
-
-/* Post Form */
-section#post-form h2 {
-    margin-top: 0;
-    font-size: 1.2rem;
-    color: #8c7851;
-}
-
-form div {
-    margin-bottom: 15px;
-}
-
-input[type="text"], textarea {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #e0d8c3;
+    margin-bottom: 25px;
+    background: #e8e3d9;
+    padding: 5px;
     border-radius: 10px;
-    box-sizing: border-box;
-    background-color: #fffaf0;
 }
 
-button {
-    background-color: #8c7851;
-    color: white;
+.tab-btn {
+    flex: 1;
+    padding: 10px;
     border: none;
-    padding: 12px 25px;
-    border-radius: 25px;
+    background: transparent;
     cursor: pointer;
-    font-weight: bold;
-    transition: background-color 0.3s;
+    font-weight: 600;
+    border-radius: 8px;
+    transition: all 0.2s;
+    color: var(--text-secondary);
 }
 
-button:hover {
-    background-color: #6d5d3e;
+.tab-btn.active {
+    background: var(--card-bg);
+    color: var(--text-primary);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.03);
 }
 
-/* Latest Post (Large Card) */
-section#latest-post h2 {
-    text-align: center;
-    font-size: 1.5rem;
-    margin-bottom: 20px;
+.tab-content {
+    display: none;
 }
 
-section#latest-post article {
-    padding: 15px;
-}
-
-section#latest-post img {
-    border-radius: 15px;
-    margin-bottom: 15px;
+.tab-content.active {
     display: block;
 }
 
-/* Past Posts Grid */
-section#past-posts h2 {
-    margin-top: 50px;
+/* Cards & Articles */
+article, section#post-form {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 16px; /* Reduced from 24px */
+    box-shadow: var(--shadow);
+    border: 1px solid rgba(0,0,0,0.03);
+    margin-bottom: 20px; /* Reduced from 25px */
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.post-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 20px;
+.post-grid article:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-hover);
 }
 
-section#past-posts article {
-    padding: 10px;
-    margin-bottom: 0;
-}
-
-section#past-posts img {
+article img {
     width: 100%;
     aspect-ratio: 1 / 1;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 8px;
+    margin-bottom: 12px; /* Reduced from 16px */
 }
 
-section#past-posts h4 {
-    margin: 10px 0 5px;
+article h4, article h3 {
+    margin: 0 0 6px 0;
+    font-size: 1rem; /* Reduced from 1.2rem */
+    font-weight: 700;
+}
+
+article p {
+    color: var(--text-secondary);
+    margin: 0 0 8px 0;
+    font-size: 0.85rem; /* Reduced from 0.95rem */
+}
+
+article small {
+    font-size: 0.75rem;
+    color: #999;
+}
+
+/* Forms */
+section#post-form {
+    padding: 24px; /* Keep form padding slightly larger for usability */
+}
+
+section#post-form h2 {
+    margin-top: 0;
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+form div {
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+input[type="text"], textarea, input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-family: inherit;
     font-size: 1rem;
+    transition: border-color 0.2s;
 }
 
-section#past-posts p {
-    font-size: 0.85rem;
-    margin: 0;
+input:focus, textarea:focus {
+    outline: none;
+    border-color: var(--accent-color);
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-    .post-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-hr {
+button {
+    background-color: var(--text-primary);
+    color: white;
     border: none;
-    border-top: 1px solid #e0d8c3;
-    margin: 40px 0;
+    padding: 12px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    transition: opacity 0.2s;
 }
 
-footer {
-    text-align: center;
-    padding: 40px 0;
-    font-size: 0.8rem;
-    color: #a0937d;
+button:hover {
+    opacity: 0.85;
 }
-/* ===== モーダル背景 ===== */
+
+.btn-container {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.btn-container button {
+    flex: 1;
+    padding: 8px;
+    font-size: 0.85rem;
+    background: #f0f0f0;
+    color: var(--text-primary);
+}
+
+.btn-container button:last-child {
+    background: #fff0f0;
+    color: #dc3545;
+}
+
+/* Post Grid */
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); /* Reduced from 280px */
+    gap: 20px; /* Reduced from 25px */
+}
+
+/* Calendar */
+.calendar-container {
+    background-color: var(--card-bg);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    box-shadow: var(--shadow);
+}
+
+.calendar-header h3 {
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendar-day-header {
+    text-align: center;
+    font-weight: 700;
+    font-size: 0.75rem;
+    color: #999;
+    padding-bottom: 10px;
+}
+
+.calendar-day {
+    aspect-ratio: 1 / 1;
+    background: #f8f9fa;
+    border-radius: 6px;
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.calendar-day:hover {
+    transform: scale(1.05);
+    z-index: 2;
+}
+
+.calendar-date-number {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    z-index: 5;
+    background: rgba(255,255,255,0.8);
+    padding: 1px 4px;
+    border-radius: 4px;
+}
+
+.calendar-thumb {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.calendar-day.today {
+    box-shadow: inset 0 0 0 2px var(--accent-color);
+}
+
+/* Modal */
 .modal {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.4);
+    backdrop-filter: blur(4px);
+    z-index: 1000;
     justify-content: center;
     align-items: center;
 }
 
-/* ===== モーダル中身 ===== */
 .modal-content {
     background: white;
-    padding: 20px;
-    border-radius: 15px;
-    width: 300px;
+    padding: 20px; /* Reduced from 30px */
+    border-radius: 16px;
+    width: 90%;
+    max-width: 360px; /* Reduced from 500px */
+    box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+    position: relative;
 }
 
-/* ボタン */
-.modal-buttons {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+#modalViewMode h2 {
+    font-size: 1.1rem; /* Smaller heading */
+    margin-top: 0;
 }
 
-.modal input,
-.modal textarea {
-    width: 100%;
+#modalViewMode p {
+    font-size: 0.85rem; /* Smaller text */
     margin-bottom: 10px;
-    padding: 8px;
 }
+
+#modalViewMode small {
+    font-size: 0.75rem;
+}
+
+.close-x {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: none;
+    border: none;
+    font-size: 1.2rem; /* Slightly smaller X */
+    cursor: pointer;
+    color: var(--text-secondary);
+    line-height: 1;
+    padding: 5px;
+}
+
+.close-x:hover {
+    color: var(--text-primary);
+    opacity: 1;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+    .dashboard { flex-direction: column; }
+    .right-panel { width: 100%; position: static; }
+}
+
+hr { border: none; border-top: 1px solid #eee; margin: 40px 0; }
+footer { padding: 40px; text-align: center; color: #999; font-size: 0.85rem; }
+ight-panel { width: 100%; position: static; }
+}
+
+hr { border: none; border-top: 1px solid #eee; margin: 40px 0; }
+footer { padding: 40px; text-align: center; color: #999; font-size: 0.85rem; }

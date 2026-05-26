@@ -13,49 +13,69 @@
     <h1>料理日記</h1>
 </header>
 
-<main>
+<main class="dashboard">
 
-    <!-- 投稿フォーム -->
-    <section id="post-form">
-        <h2>新しい料理を記録する</h2>
+    <div class="left-panel">
+        <!-- タブナビゲーション -->
+        <nav class="tabs">
+            <button class="tab-btn active" onclick="switchTab('record-tab')">記録する</button>
+            <button class="tab-btn" onclick="switchTab('feed-tab')">過去の投稿</button>
+        </nav>
 
-        <form id="postForm">
+        <div id="record-tab" class="tab-content active">
+            <!-- 投稿フォーム -->
+            <section id="post-form">
+                <h2>新しい料理を記録する</h2>
 
-            <div>
-                <label for="image">写真：</label>
-                <input type="file" id="image" accept="image/*">
+                <form id="postForm">
+                    <div>
+                        <label for="image">写真：</label>
+                        <input type="file" id="image" accept="image/*">
+                    </div>
+                    <div>
+                        <label for="dish-name">料理名：</label>
+                        <input type="text" id="dish-name" placeholder="例：肉じゃが" required>
+                    </div>
+                    <div>
+                        <label for="feedback">感想：</label>
+                        <textarea id="feedback" rows="3" placeholder="味やコツなど"></textarea>
+                    </div>
+                    <button type="submit" id="submitBtn">投稿する</button>
+                </form>
+            </section>
+        </div>
+
+        <div id="feed-tab" class="tab-content">
+            <!-- 最新投稿 -->
+            <section id="latest-post">
+                <h2>最新の投稿</h2>
+                <article></article>
+            </section>
+
+            <hr>
+
+            <!-- 過去投稿 -->
+            <section id="past-posts">
+                <h2>過去の投稿</h2>
+                <div class="post-grid"></div>
+            </section>
+        </div>
+    </div>
+
+    <div class="right-panel">
+        <!-- カレンダー表示 -->
+        <section id="calendar-section">
+            <h2>料理カレンダー</h2>
+            <div class="calendar-container">
+                <div class="calendar-header">
+                    <button id="prevMonth">&lt;</button>
+                    <h3 id="currentMonth">2026年 5月</h3>
+                    <button id="nextMonth">&gt;</button>
+                </div>
+                <div id="calendar-grid" class="calendar-grid"></div>
             </div>
-
-            <div>
-                <label for="dish-name">料理名：</label>
-                <input type="text" id="dish-name" placeholder="例：肉じゃが" required>
-            </div>
-
-            <div>
-                <label for="feedback">感想：</label>
-                <textarea id="feedback" rows="3" placeholder="味やコツなど"></textarea>
-            </div>
-
-            <button type="submit" id="submitBtn">投稿する</button>
-
-        </form>
-    </section>
-
-    <hr>
-
-    <!-- 最新投稿 -->
-    <section id="latest-post">
-        <h2>最新の投稿</h2>
-        <article></article>
-    </section>
-
-    <hr>
-
-    <!-- 過去投稿 -->
-    <section id="past-posts">
-        <h2>過去の投稿</h2>
-        <div class="post-grid"></div>
-    </section>
+        </section>
+    </div>
 
 </main>
 
@@ -65,20 +85,31 @@
 
 
 <!-- =========================
-     編集モーダル（ここが正解位置）
+     表示・編集モーダル
 ========================= -->
-<div id="editModal" class="modal">
+<div id="postModal" class="modal">
 
     <div class="modal-content">
+        <button id="closeModalBtnTop" class="close-x">&times;</button>
 
-        <h2>料理を編集</h2>
+        <div id="modalViewMode">
+            <img id="viewImage" src="" alt="" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
+            <h2 id="viewDishName"></h2>
+            <p id="viewFeedback"></p>
+            <p><small id="viewDate"></small></p>
+            <div class="modal-buttons">
+                <button id="switchToEditBtn">編集する</button>
+            </div>
+        </div>
 
-        <input type="text" id="editDishName" placeholder="料理名">
-        <textarea id="editFeedback" placeholder="感想"></textarea>
-
-        <div class="modal-buttons">
-            <button id="saveEditBtn">保存</button>
-            <button id="closeModalBtn">閉じる</button>
+        <div id="modalEditMode" style="display: none;">
+            <h2>料理を編集</h2>
+            <input type="text" id="editDishName" placeholder="料理名">
+            <textarea id="editFeedback" placeholder="感想"></textarea>
+            <div class="modal-buttons">
+                <button id="saveEditBtn">保存</button>
+                <button id="cancelEditBtn">キャンセル</button>
+            </div>
         </div>
 
     </div>
