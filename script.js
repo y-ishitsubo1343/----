@@ -225,11 +225,16 @@ function renderCalendar() {
 // 投稿作成
 // ==========================
 function createPost(imageData) {
+    console.log("Creating post...");
     const dishNameEl = getEl("dish-name");
     const feedbackEl = getEl("feedback");
     const postDateEl = getEl("post-date");
+    const submitBtn = getEl("submitBtn");
 
-    if (!dishNameEl || !feedbackEl || !postDateEl) return;
+    if (!dishNameEl || !feedbackEl || !postDateEl) {
+        console.error("Form elements not found");
+        return;
+    }
 
     const dishName = dishNameEl.value;
     const feedback = feedbackEl.value;
@@ -245,12 +250,30 @@ function createPost(imageData) {
         date
     };
 
-    posts.push(newPost);
-    localStorage.setItem("posts", JSON.stringify(posts));
-    renderPosts();
-    
-    if (postForm) postForm.reset();
-    postDateEl.valueAsDate = new Date();
+    try {
+        posts.push(newPost);
+        localStorage.setItem("posts", JSON.stringify(posts));
+        console.log("Post saved successfully");
+        renderPosts();
+        
+        if (postForm) postForm.reset();
+        postDateEl.valueAsDate = new Date();
+    } catch (e) {
+        console.error("Failed to save to localStorage:", e);
+        // 容量オーバーの場合の警告
+        if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
+            alert("保存容量がいっぱいです。写真を小さくするか、古い投稿を削除してください。");
+        } else {
+            alert("投稿の保存に失敗しました。再度お試しください。");
+        }
+        // 追加に失敗したので配列から削除
+        posts.pop();
+    } finally {
+        if (submitBtn) {
+            submitBtn.textContent = "投稿する";
+            submitBtn.disabled = false;
+        }
+    }
 }
 
 
@@ -260,12 +283,27 @@ function createPost(imageData) {
 if (postForm) {
     postForm.addEventListener("submit", function (e) {
         e.preventDefault();
+        console.log("Form submitted");
+        
+        const submitBtn = getEl("submitBtn");
+        if (submitBtn) {
+            submitBtn.textContent = "送信中...";
+            submitBtn.disabled = true;
+        }
+
         const imageEl = getEl("image");
         const imageFile = imageEl ? imageEl.files[0] : null;
 
         if (imageFile) {
             const reader = new FileReader();
             reader.onload = (event) => createPost(event.target.result);
+            reader.onerror = () => {
+                alert("画像の読み込みに失敗しました。");
+                if (submitBtn) {
+                    submitBtn.textContent = "投稿する";
+                    submitBtn.disabled = false;
+                }
+            };
             reader.readAsDataURL(imageFile);
         } else {
             createPost("https://via.placeholder.com/200");
