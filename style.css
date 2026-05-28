@@ -207,6 +207,29 @@ input:focus, textarea:focus {
     border-color: var(--accent-color);
 }
 
+#submitBtn {
+    background-color: #6d4c41; /* Warm brown */
+    color: white;
+    border: none;
+    padding: 16px 32px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.1rem;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.2s, transform 0.1s;
+}
+
+#submitBtn:hover {
+    background-color: #5d4037;
+    opacity: 1;
+}
+
+#submitBtn:active {
+    transform: scale(0.98);
+}
+
 button {
     background-color: var(--text-primary);
     color: white;
