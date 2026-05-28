@@ -267,7 +267,6 @@ function createPost(imageData) {
         const fileNameDisplay = getEl("file-name");
         if (fileNameDisplay) fileNameDisplay.textContent = "選択されていません";
     } catch (e) {
-    } catch (e) {
         console.error("Failed to save to localStorage:", e);
         // 容量オーバーの場合の警告
         if (e.name === 'QuotaExceededError' || e.name === 'NS_ERROR_DOM_QUOTA_REACHED') {
