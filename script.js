@@ -278,10 +278,55 @@ function createPost(imageData) {
 
 
 // ==========================
+// 画像圧縮処理
+// ==========================
+function compressImage(file) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement("canvas");
+                const MAX_WIDTH = 800; // 最大幅を800pxに制限
+                const MAX_HEIGHT = 800;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > height) {
+                    if (width > MAX_WIDTH) {
+                        height *= MAX_WIDTH / width;
+                        width = MAX_WIDTH;
+                    }
+                } else {
+                    if (height > MAX_HEIGHT) {
+                        width *= MAX_HEIGHT / height;
+                        height = MAX_HEIGHT;
+                    }
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext("2d");
+                ctx.drawImage(img, 0, 0, width, height);
+
+                // JPEG形式で圧縮（画質 0.7）
+                const compressedDataUrl = canvas.toDataURL("image/jpeg", 0.7);
+                resolve(compressedDataUrl);
+            };
+            img.onerror = reject;
+        };
+        reader.onerror = reject;
+    });
+}
+
+
+// ==========================
 // 投稿送信
 // ==========================
 if (postForm) {
-    postForm.addEventListener("submit", function (e) {
+    postForm.addEventListener("submit", async function (e) {
         e.preventDefault();
         console.log("Form submitted");
         
@@ -294,19 +339,21 @@ if (postForm) {
         const imageEl = getEl("image");
         const imageFile = imageEl ? imageEl.files[0] : null;
 
-        if (imageFile) {
-            const reader = new FileReader();
-            reader.onload = (event) => createPost(event.target.result);
-            reader.onerror = () => {
-                alert("画像の読み込みに失敗しました。");
-                if (submitBtn) {
-                    submitBtn.textContent = "投稿する";
-                    submitBtn.disabled = false;
-                }
-            };
-            reader.readAsDataURL(imageFile);
-        } else {
-            createPost("https://via.placeholder.com/200");
+        try {
+            if (imageFile) {
+                // 画像を圧縮してから投稿作成
+                const compressedImage = await compressImage(imageFile);
+                createPost(compressedImage);
+            } else {
+                createPost("https://via.placeholder.com/200");
+            }
+        } catch (err) {
+            console.error("Image processing failed:", err);
+            alert("画像の処理に失敗しました。");
+            if (submitBtn) {
+                submitBtn.textContent = "投稿する";
+                submitBtn.disabled = false;
+            }
         }
     });
 }
