@@ -19,7 +19,7 @@ body {
         linear-gradient(rgba(166, 139, 106, 0.04) 50%, transparent 50%);
     background-size: 40px 40px;
     color: var(--text-primary);
-    font-family: 'Zen Old Mincho', 'Kiwi Maru', serif;
+    font-family: 'Kiwi Maru', 'Zen Old Mincho', serif;
     margin: 0;
     padding: 0;
     line-height: 1.6;
