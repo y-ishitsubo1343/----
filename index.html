@@ -59,8 +59,10 @@
                 <form id="postForm">
 
                     <div>
-                        <label for="image">写真：</label>
-                        <input type="file" id="image" accept="image/*">
+                        <label>写真：</label>
+                        <label for="image" class="custom-file-upload">画像を選択</label>
+                        <input type="file" id="image" accept="image/*" style="display: none;">
+                        <div id="file-name" style="margin-top: 5px; font-size: 0.8rem; color: var(--text-secondary); min-height: 1.2em;">選択されていません</div>
                     </div>
 
                     <div>

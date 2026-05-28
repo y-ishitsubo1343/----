@@ -192,6 +192,27 @@ label {
     font-size: 0.9rem;
 }
 
+.custom-file-upload {
+    display: block;
+    width: 100%;
+    padding: 12px;
+    background: #f0f0f0;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s, border-color 0.2s;
+    box-sizing: border-box;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.custom-file-upload:hover {
+    background: #e8e8e8;
+    border-color: var(--accent-color);
+}
+
 input[type="text"], 
 input[type="date"], 
 input[type="file"], 

@@ -520,3 +520,13 @@ if (resetDataBtn) {
 renderPosts();
 const postDateEl = getEl("post-date");
 if (postDateEl) postDateEl.valueAsDate = new Date();
+
+// 画像選択時のファイル名表示
+const imageInput = getEl("image");
+const fileNameDisplay = getEl("file-name");
+if (imageInput && fileNameDisplay) {
+    imageInput.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        fileNameDisplay.textContent = file ? file.name : "選択されていません";
+    });
+}
