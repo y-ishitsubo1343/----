@@ -192,7 +192,10 @@ label {
     font-size: 0.9rem;
 }
 
-input[type="text"], textarea, input[type="file"] {
+input[type="text"], 
+input[type="date"], 
+input[type="file"], 
+textarea {
     width: 100%;
     padding: 12px;
     border: 1px solid #ddd;
@@ -200,6 +203,7 @@ input[type="text"], textarea, input[type="file"] {
     font-family: inherit;
     font-size: 1rem;
     transition: border-color 0.2s;
+    box-sizing: border-box; /* Padding inclusion */
 }
 
 input:focus, textarea:focus {
@@ -219,6 +223,7 @@ input:focus, textarea:focus {
     width: 100%;
     margin-top: 10px;
     transition: background-color 0.2s, transform 0.1s;
+    box-sizing: border-box;
 }
 
 #submitBtn:hover {
