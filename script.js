@@ -150,8 +150,8 @@ function renderPosts() {
             if (latest) {
                 contentBody.innerHTML = `
                     <img src="${latest.image}" alt="${latest.dishName}" width="100%">
-                    <h3><strong>Dish:</strong> ${latest.dishName}</h3>
-                    <p><strong>Comment:</strong> ${latest.feedback}</p>
+                    <h3><strong class="font-serif">Dish:</strong> ${latest.dishName}</h3>
+                    <p><strong class="font-serif">Comment:</strong> ${latest.feedback}</p>
                     <p><small>${latest.date}</small></p>
                 `;
             } else {
