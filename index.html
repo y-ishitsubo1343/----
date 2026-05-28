@@ -10,112 +10,128 @@
 <body>
 
 <header>
-    <h1>料理日記</h1>
+    <h1>
+        <svg class="hand-icon" viewBox="0 0 24 24">
+            <path d="M5 10c0 4 3 7 7 7s7-3 7-7H5zM19 11h2c1 0 2 1 2 2s-1 2-2 2h-2M4 19h16" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"/>
+        </svg>
+        my recipe log
+    </h1>
 </header>
 
-<main class="dashboard">
-
-    <div class="left-panel">
-        <!-- タブナビゲーション -->
-        <nav class="tabs">
-            <button class="tab-btn active" onclick="switchTab('record-tab')">記録する</button>
-            <button class="tab-btn" onclick="switchTab('feed-tab')">過去の投稿</button>
-        </nav>
-
-        <div id="record-tab" class="tab-content active">
-            <!-- 投稿フォーム -->
-            <section id="post-form">
-                <h2>新しい料理を記録する</h2>
-
-                <form id="postForm">
-                    <div>
-                        <label for="image">写真：</label>
-                        <input type="file" id="image" accept="image/*">
-                    </div>
-                    <div>
-                        <label for="dish-name">料理名：</label>
-                        <input type="text" id="dish-name" placeholder="例：肉じゃが" required>
-                    </div>
-                    <div>
-                        <label for="feedback">感想：</label>
-                        <textarea id="feedback" rows="3" placeholder="味やコツなど"></textarea>
-                    </div>
-                    <button type="submit" id="submitBtn">投稿する</button>
-                </form>
-            </section>
-        </div>
-
-        <div id="feed-tab" class="tab-content">
-            <!-- 最新投稿 -->
+<main>
+    <div class="dashboard">
+        <div class="left-panel">
+            <!-- 最新投稿（上半分） -->
             <section id="latest-post">
-                <h2>最新の投稿</h2>
-                <article></article>
+                <article>
+                    <h2>
+                        Today 
+                        <svg class="hand-icon" viewBox="0 0 24 24" style="margin-left: 5px;">
+                            <circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.5" fill="none"/>
+                            <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4l1.4-1.4M17 7l1.4-1.4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                    </h2>
+                    <div class="content-body"></div>
+                </article>
             </section>
 
             <hr>
 
-            <!-- 過去投稿 -->
-            <section id="past-posts">
-                <h2>過去の投稿</h2>
-                <div class="post-grid"></div>
+            <!-- 投稿フォーム（下半分） -->
+            <section id="post-form">
+                <h2>
+                    Record 
+                    <svg class="hand-icon" viewBox="0 0 24 24" style="margin-left: 5px;">
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L7 20l-4 1 1-4L18.5 2.5z" stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        <path d="M15 5l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </h2>
+
+                <form id="postForm">
+
+                    <div>
+                        <label for="image">写真：</label>
+                        <input type="file" id="image" accept="image/*">
+                    </div>
+
+                    <div>
+                        <label for="dish-name">料理名：</label>
+                        <input type="text" id="dish-name" placeholder="例：肉じゃが" required>
+                    </div>
+
+                    <div>
+                        <label for="feedback">感想：</label>
+                        <textarea id="feedback" rows="3" placeholder="味やコツなど"></textarea>
+                    </div>
+
+                    <!-- 日付追加 -->
+                    <div>
+                        <label for="post-date">日付：</label>
+                        <input type="date" id="post-date">
+                    </div>
+
+                    <button type="submit" id="submitBtn">投稿する</button>
+
+                </form>
             </section>
         </div>
-    </div>
 
-    <div class="right-panel">
-        <!-- カレンダー表示 -->
-        <section id="calendar-section">
-            <h2>料理カレンダー</h2>
-            <div class="calendar-container">
-                <div class="calendar-header">
-                    <button id="prevMonth">&lt;</button>
-                    <h3 id="currentMonth">2026年 5月</h3>
-                    <button id="nextMonth">&gt;</button>
-                </div>
-                <div id="calendar-grid" class="calendar-grid"></div>
+        <div class="right-panel">
+            <div class="tabs">
+                <button class="tab-btn active" data-tab="calendar-tab">カレンダー</button>
+                <button class="tab-btn" data-tab="history-tab">履歴</button>
             </div>
-        </section>
-    </div>
 
+            <div id="calendar-tab" class="tab-content active">
+                <div class="calendar-container">
+                    <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <button id="prevMonth" style="padding: 5px 10px; background: none; color: var(--text-primary); border: 1px solid #ddd;">&lt;</button>
+                        <h3 id="calendar-month" style="margin: 0;">2026年 5月</h3>
+                        <button id="nextMonth" style="padding: 5px 10px; background: none; color: var(--text-primary); border: 1px solid #ddd;">&gt;</button>
+                    </div>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- カレンダーがここに生成される -->
+                    </div>
+                </div>
+            </div>
+
+            <div id="history-tab" class="tab-content">
+                <div class="calendar-container">
+                    <h3>過去の投稿一覧</h3>
+                    <div id="past-posts">
+                        <div class="post-grid"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </main>
 
 <footer>
     <p>&copy; 2026 料理日記</p>
 </footer>
 
-
-<!-- =========================
-     表示・編集モーダル
-========================= -->
-<div id="postModal" class="modal">
+<!-- 編集モーダル -->
+<div id="editModal" class="modal">
 
     <div class="modal-content">
-        <button id="closeModalBtnTop" class="close-x">&times;</button>
 
-        <div id="modalViewMode">
-            <img id="viewImage" src="" alt="" style="width: 100%; border-radius: 8px; margin-bottom: 15px;">
-            <h2 id="viewDishName"></h2>
-            <p id="viewFeedback"></p>
-            <p><small id="viewDate"></small></p>
-            <div class="modal-buttons">
-                <button id="switchToEditBtn">編集する</button>
-            </div>
-        </div>
+        <h2>料理を編集</h2>
 
-        <div id="modalEditMode" style="display: none;">
-            <h2>料理を編集</h2>
-            <input type="text" id="editDishName" placeholder="料理名">
-            <textarea id="editFeedback" placeholder="感想"></textarea>
-            <div class="modal-buttons">
-                <button id="saveEditBtn">保存</button>
-                <button id="cancelEditBtn">キャンセル</button>
-            </div>
+        <img id="editImagePreview" src="" alt="料理写真" style="width: 100%; border-radius: 8px; margin-bottom: 15px; aspect-ratio: 1/1; object-fit: cover;">
+
+        <input type="text" id="editDishName" placeholder="料理名">
+        <textarea id="editFeedback" placeholder="感想" rows="3" style="width: 100%; margin-top: 10px; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;"></textarea>
+
+        <div class="modal-buttons" style="display: flex; gap: 10px; margin-top: 20px;">
+            <button id="saveEditBtn" style="flex: 1;">保存</button>
+            <button id="deleteEditBtn" style="flex: 1; background: #fff0f0; color: #dc3545;">削除</button>
+            <button id="closeModalBtn" style="flex: 1; background: #f0f0f0; color: var(--text-primary);">閉じる</button>
         </div>
 
     </div>
 
 </div>
-
 
 <script src="script.js"></script>
 

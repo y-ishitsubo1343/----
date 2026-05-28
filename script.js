@@ -1,29 +1,36 @@
 // ==========================
 // 投稿データ（localStorage対応）
 // ==========================
-let posts = JSON.parse(localStorage.getItem("posts")) || [
-    {
-        id: 1,
-        image: "https://via.placeholder.com/200",
-        dishName: "オムライス",
-        feedback: "卵がふわふわにできた！",
-        date: "2026/05/20"
-    },
-    {
-        id: 2,
-        image: "https://via.placeholder.com/200",
-        dishName: "サバの塩焼き",
-        feedback: "皮がパリパリ。",
-        date: "2026/05/19"
-    },
-    {
-        id: 3,
-        image: "https://via.placeholder.com/200",
-        dishName: "味噌汁",
-        feedback: "いつもの味。",
-        date: "2026/05/18"
-    }
-];
+let posts = [];
+try {
+    const savedPosts = localStorage.getItem("posts");
+    posts = savedPosts ? JSON.parse(savedPosts) : [
+        {
+            id: 1,
+            image: "https://via.placeholder.com/200",
+            dishName: "オムライス",
+            feedback: "卵がふわふわにできた！",
+            date: "2026-05-20"
+        },
+        {
+            id: 2,
+            image: "https://via.placeholder.com/200",
+            dishName: "サバの塩焼き",
+            feedback: "皮がパリパリ。",
+            date: "2026-05-19"
+        },
+        {
+            id: 3,
+            image: "https://via.placeholder.com/200",
+            dishName: "味噌汁",
+            feedback: "いつもの味。",
+            date: "2026-05-18"
+        }
+    ];
+} catch (e) {
+    console.error("Failed to load posts:", e);
+    posts = [];
+}
 
 
 // ==========================
@@ -33,50 +40,121 @@ let editingId = null;
 
 
 // ==========================
-// DOM取得
+// DOM取得（安全に取得）
 // ==========================
-const postForm = document.getElementById("postForm");
-const postGrid = document.querySelector(".post-grid");
-const latestPostSection = document.getElementById("latest-post");
+const getEl = (id) => document.getElementById(id);
+const postForm = getEl("postForm");
+const latestPostSection = getEl("latest-post");
+const calendarGrid = getEl("calendarGrid");
+const calendarMonthDisplay = getEl("calendar-month");
+const prevMonthBtn = getEl("prevMonth");
+const nextMonthBtn = getEl("nextMonth");
 
 // モーダル
-const modal = document.getElementById("postModal");
-const modalViewMode = document.getElementById("modalViewMode");
-const modalEditMode = document.getElementById("modalEditMode");
+const modal = getEl("editModal");
+const editImagePreview = getEl("editImagePreview");
+const editDishName = getEl("editDishName");
+const editFeedback = getEl("editFeedback");
+const saveEditBtn = getEl("saveEditBtn");
+const deleteEditBtn = getEl("deleteEditBtn");
+const closeModalBtn = getEl("closeModalBtn");
 
-const viewImage = document.getElementById("viewImage");
-const viewDishName = document.getElementById("viewDishName");
-const viewFeedback = document.getElementById("viewFeedback");
-const viewDate = document.getElementById("viewDate");
+// タブ
+const tabButtons = document.querySelectorAll(".tab-btn");
+const tabContents = document.querySelectorAll(".tab-content");
 
-const editDishName = document.getElementById("editDishName");
-const editFeedback = document.getElementById("editFeedback");
-
-const saveEditBtn = document.getElementById("saveEditBtn");
-const cancelEditBtn = document.getElementById("cancelEditBtn");
-const closeModalBtnTop = document.getElementById("closeModalBtnTop");
-const switchToEditBtn = document.getElementById("switchToEditBtn");
+// 表示中のカレンダーの年月
+let calendarDate = new Date();
 
 
 // ==========================
-// カレンダー管理
+// タブ切り替え
 // ==========================
-let currentViewDate = new Date();
+tabButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+        const targetTab = btn.getAttribute("data-tab");
+        tabButtons.forEach(b => b.classList.remove("active"));
+        tabContents.forEach(c => c.classList.remove("active"));
+        btn.classList.add("active");
+        const target = getEl(targetTab);
+        if (target) target.classList.add("active");
+    });
+});
 
-const currentMonthElement = document.getElementById("currentMonth");
-const calendarGrid = document.getElementById("calendar-grid");
-const prevMonthBtn = document.getElementById("prevMonth");
-const nextMonthBtn = document.getElementById("nextMonth");
 
+// ==========================
+// カレンダーナビゲーション
+// ==========================
+if (prevMonthBtn) {
+    prevMonthBtn.addEventListener("click", () => {
+        calendarDate.setMonth(calendarDate.getMonth() - 1);
+        renderCalendar();
+    });
+}
+
+if (nextMonthBtn) {
+    nextMonthBtn.addEventListener("click", () => {
+        calendarDate.setMonth(calendarDate.getMonth() + 1);
+        renderCalendar();
+    });
+}
+
+
+// ==========================
+// 表示更新
+// ==========================
+function renderPosts() {
+    // 履歴タブの更新
+    const pastPostsContainer = document.querySelector("#past-posts .post-grid");
+    if (pastPostsContainer) {
+        pastPostsContainer.innerHTML = "";
+        const allPosts = [...posts].reverse();
+        allPosts.forEach(post => {
+            const article = document.createElement("article");
+            article.innerHTML = `
+                <img src="${post.image}" alt="${post.dishName}">
+                <h4>${post.dishName}</h4>
+                <p>${post.feedback}</p>
+                <p><small>${post.date}</small></p>
+                <div class="btn-container">
+                    <button onclick="startEdit(${post.id})">編集</button>
+                    <button onclick="deletePost(${post.id})">削除</button>
+                </div>
+            `;
+            pastPostsContainer.appendChild(article);
+        });
+    }
+
+    // TODAYセクションの更新
+    if (latestPostSection) {
+        const contentBody = latestPostSection.querySelector(".content-body");
+        if (contentBody) {
+            const latest = posts[posts.length - 1];
+            if (latest) {
+                contentBody.innerHTML = `
+                    <img src="${latest.image}" alt="${latest.dishName}" width="100%">
+                    <h3><strong>Dish:</strong> ${latest.dishName}</h3>
+                    <p><strong>Comment:</strong> ${latest.feedback}</p>
+                    <p><small>${latest.date}</small></p>
+                `;
+            } else {
+                contentBody.innerHTML = "<p>まだ投稿がありません</p>";
+            }
+        }
+    }
+
+    renderCalendar();
+}
+
+
+// ==========================
+// カレンダー生成
+// ==========================
 function renderCalendar() {
+    if (!calendarGrid || !calendarMonthDisplay) return;
+
     calendarGrid.innerHTML = "";
-    
-    const year = currentViewDate.getFullYear();
-    const month = currentViewDate.getMonth();
-    
-    currentMonthElement.textContent = `${year}年 ${month + 1}月`;
-    
-    // 曜日のヘッダー
+
     const days = ["日", "月", "火", "水", "木", "金", "土"];
     days.forEach(day => {
         const dayHeader = document.createElement("div");
@@ -84,196 +162,63 @@ function renderCalendar() {
         dayHeader.textContent = day;
         calendarGrid.appendChild(dayHeader);
     });
-    
-    // 月の最初の日と最後の日
+
+    const year = calendarDate.getFullYear();
+    const month = calendarDate.getMonth();
+    calendarMonthDisplay.textContent = `${year}年 ${month + 1}月`;
+
     const firstDay = new Date(year, month, 1).getDay();
-    const lastDate = new Date(year, month + 1, 0).getDate();
-    
-    // 空白を埋める
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+
     for (let i = 0; i < firstDay; i++) {
-        const emptyCell = document.createElement("div");
-        emptyCell.className = "calendar-day";
-        calendarGrid.appendChild(emptyCell);
+        calendarGrid.appendChild(document.createElement("div"));
     }
-    
-    // 日付を埋める
-    const today = new Date();
-    for (let date = 1; date <= lastDate; date++) {
-        const dayCell = document.createElement("div");
-        dayCell.className = "calendar-day";
-        
-        const dateNumber = document.createElement("span");
-        dateNumber.className = "calendar-date-number";
-        dateNumber.textContent = date;
-        dayCell.appendChild(dateNumber);
-        
-        if (year === today.getFullYear() && month === today.getMonth() && date === today.getDate()) {
-            dayCell.classList.add("today");
+
+    for (let d = 1; d <= daysInMonth; d++) {
+        const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const dateStrAlt = `${year}/${String(month + 1).padStart(2, '0')}/${String(d).padStart(2, '0')}`;
+
+        const cell = document.createElement("div");
+        cell.className = "calendar-day";
+
+        const dateNum = document.createElement("span");
+        dateNum.className = "calendar-date-number";
+        dateNum.textContent = d;
+        cell.appendChild(dateNum);
+
+        const postOnDate = posts.find(p => p.date === dateStr || p.date === dateStrAlt);
+        if (postOnDate) {
+            const thumb = document.createElement("img");
+            thumb.src = postOnDate.image;
+            thumb.className = "calendar-thumb";
+            cell.appendChild(thumb);
+            cell.onclick = () => startEdit(postOnDate.id);
         }
-        
-        // その日の投稿を探す
-        const dayPosts = posts.filter(p => {
-            const pDate = new Date(p.date);
-            return pDate.getFullYear() === year && pDate.getMonth() === month && pDate.getDate() === date;
-        });
-        
-        if (dayPosts.length > 0) {
-            dayCell.classList.add("has-post");
-            
-            // 写真を表示
-            const img = document.createElement("img");
-            img.src = dayPosts[0].image;
-            img.className = "calendar-thumb";
-            dayCell.appendChild(img);
-            
-            // クリックイベント
-            dayCell.onclick = () => openViewModal(dayPosts[0].id);
+
+        const today = new Date();
+        if (d === today.getDate() && month === today.getMonth() && year === today.getFullYear()) {
+            cell.classList.add("today");
         }
-        
-        calendarGrid.appendChild(dayCell);
-    }
-}
-
-prevMonthBtn.addEventListener("click", () => {
-    currentViewDate.setMonth(currentViewDate.getMonth() - 1);
-    renderCalendar();
-});
-
-nextMonthBtn.addEventListener("click", () => {
-    currentViewDate.setMonth(currentViewDate.getMonth() + 1);
-    renderCalendar();
-});
-
-
-// ==========================
-// タブ切り替え
-// ==========================
-function switchTab(tabId) {
-    document.querySelectorAll('.tab-content').forEach(content => {
-        content.classList.remove('active');
-    });
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.classList.remove('active');
-    });
-    document.getElementById(tabId).classList.add('active');
-    const activeBtn = Array.from(document.querySelectorAll('.tab-btn')).find(btn => 
-        btn.getAttribute('onclick').includes(tabId)
-    );
-    if (activeBtn) activeBtn.classList.add('active');
-}
-
-
-// ==========================
-// モーダル管理（表示・編集）
-// ==========================
-function openViewModal(id) {
-    const post = posts.find(p => p.id === id);
-    if (!post) return;
-
-    editingId = id;
-
-    // 表示モードのセット
-    viewImage.src = post.image;
-    viewDishName.textContent = post.dishName;
-    viewFeedback.textContent = post.feedback;
-    viewDate.textContent = post.date;
-
-    modalViewMode.style.display = "block";
-    modalEditMode.style.display = "none";
-    modal.style.display = "flex";
-}
-
-switchToEditBtn.onclick = () => {
-    const post = posts.find(p => p.id === editingId);
-    if (!post) return;
-
-    editDishName.value = post.dishName;
-    editFeedback.value = post.feedback;
-
-    modalViewMode.style.display = "none";
-    modalEditMode.style.display = "block";
-};
-
-function closeModal() {
-    modal.style.display = "none";
-    editingId = null;
-}
-
-closeModalBtnTop.onclick = closeModal;
-
-saveEditBtn.onclick = () => {
-    const post = posts.find(p => p.id === editingId);
-    if (!post) return;
-
-    post.dishName = editDishName.value;
-    post.feedback = editFeedback.value;
-
-    localStorage.setItem("posts", JSON.stringify(posts));
-
-    renderPosts();
-    closeModal();
-};
-
-cancelEditBtn.onclick = () => {
-    modalViewMode.style.display = "block";
-    modalEditMode.style.display = "none";
-};
-
-window.onclick = (event) => {
-    if (event.target == modal) closeModal();
-};
-
-
-// ==========================
-// 表示更新
-// ==========================
-function renderPosts() {
-    renderCalendar();
-    postGrid.innerHTML = "";
-
-    const pastPosts = posts.slice(0, -1).reverse();
-
-    pastPosts.forEach(post => {
-        const article = document.createElement("article");
-
-        article.innerHTML = `
-            <img src="${post.image}" alt="${post.dishName}">
-            <h4>${post.dishName}</h4>
-            <p>${post.feedback}</p>
-            <p><small>${post.date}</small></p>
-
-            <div class="btn-container">
-                <button onclick="openViewModal(${post.id})">表示</button>
-                <button onclick="deletePost(${post.id})">削除</button>
-            </div>
-        `;
-
-        postGrid.appendChild(article);
-    });
-
-    const latest = posts[posts.length - 1];
-    if (latest) {
-        latestPostSection.querySelector("article").innerHTML = `
-            <img src="${latest.image}" alt="${latest.dishName}">
-            <h3>今日の料理：${latest.dishName}</h3>
-            <p><strong>感想：</strong> ${latest.feedback}</p>
-            <p><small>${latest.date}</small></p>
-            <div class="btn-container">
-                <button onclick="openViewModal(${latest.id})">表示</button>
-                <button onclick="deletePost(${latest.id})">削除</button>
-            </div>
-        `;
+        calendarGrid.appendChild(cell);
     }
 }
 
 
 // ==========================
-// 投稿作成（画像なし対応）
+// 投稿作成
 // ==========================
 function createPost(imageData) {
-    const dishName = document.getElementById("dish-name").value;
-    const feedback = document.getElementById("feedback").value;
-    const date = new Date().toLocaleDateString("ja-JP");
+    const dishNameEl = getEl("dish-name");
+    const feedbackEl = getEl("feedback");
+    const postDateEl = getEl("post-date");
+
+    if (!dishNameEl || !feedbackEl || !postDateEl) return;
+
+    const dishName = dishNameEl.value;
+    const feedback = feedbackEl.value;
+    const dateInput = postDateEl.value;
+
+    const date = dateInput || new Date().toISOString().split('T')[0];
 
     const newPost = {
         id: Date.now(),
@@ -285,38 +230,38 @@ function createPost(imageData) {
 
     posts.push(newPost);
     localStorage.setItem("posts", JSON.stringify(posts));
-
     renderPosts();
-    postForm.reset();
+    
+    if (postForm) postForm.reset();
+    postDateEl.valueAsDate = new Date();
 }
 
 
 // ==========================
 // 投稿送信
 // ==========================
-postForm.addEventListener("submit", function (e) {
-    e.preventDefault();
+if (postForm) {
+    postForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const imageEl = getEl("image");
+        const imageFile = imageEl ? imageEl.files[0] : null;
 
-    const imageFile = document.getElementById("image").files[0];
-
-    if (imageFile) {
-        const reader = new FileReader();
-
-        reader.onload = function (event) {
-            createPost(event.target.result);
-        };
-
-        reader.readAsDataURL(imageFile);
-    } else {
-        createPost("https://via.placeholder.com/200");
-    }
-});
+        if (imageFile) {
+            const reader = new FileReader();
+            reader.onload = (event) => createPost(event.target.result);
+            reader.readAsDataURL(imageFile);
+        } else {
+            createPost("https://via.placeholder.com/200");
+        }
+    });
+}
 
 
 // ==========================
 // 削除機能
 // ==========================
 function deletePost(id) {
+    if (!confirm("この投稿を削除しますか？")) return;
     posts = posts.filter(post => post.id !== id);
     localStorage.setItem("posts", JSON.stringify(posts));
     renderPosts();
@@ -324,6 +269,67 @@ function deletePost(id) {
 
 
 // ==========================
+// 編集開始（モーダル表示）
+// ==========================
+function startEdit(id) {
+    const post = posts.find(p => p.id === id);
+    if (!post || !modal) return;
+
+    editingId = id;
+    if (editImagePreview) editImagePreview.src = post.image;
+    if (editDishName) editDishName.value = post.dishName;
+    if (editFeedback) editFeedback.value = post.feedback;
+
+    modal.style.display = "flex";
+}
+
+
+// ==========================
+// 編集保存
+// ==========================
+if (saveEditBtn) {
+    saveEditBtn.addEventListener("click", () => {
+        const post = posts.find(p => p.id === editingId);
+        if (post) {
+            post.dishName = editDishName.value;
+            post.feedback = editFeedback.value;
+            localStorage.setItem("posts", JSON.stringify(posts));
+            renderPosts();
+        }
+        if (modal) modal.style.display = "none";
+        editingId = null;
+    });
+}
+
+
+// ==========================
+// 編集モーダル内からの削除
+// ==========================
+if (deleteEditBtn) {
+    deleteEditBtn.addEventListener("click", () => {
+        if (editingId) {
+            deletePost(editingId);
+            if (modal) modal.style.display = "none";
+            editingId = null;
+        }
+    });
+}
+
+
+// ==========================
+// モーダル閉じる
+// ==========================
+if (closeModalBtn) {
+    closeModalBtn.addEventListener("click", () => {
+        if (modal) modal.style.display = "none";
+        editingId = null;
+    });
+}
+
+
+// ==========================
 // 初期表示
 // ==========================
 renderPosts();
+const postDateEl = getEl("post-date");
+if (postDateEl) postDateEl.valueAsDate = new Date();
