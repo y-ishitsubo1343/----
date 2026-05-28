@@ -10,12 +10,20 @@
 <body>
 
 <header>
-    <h1>
-        <svg class="hand-icon" viewBox="0 0 24 24">
-            <path d="M5 10c0 4 3 7 7 7s7-3 7-7H5zM19 11h2c1 0 2 1 2 2s-1 2-2 2h-2M4 19h16" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"/>
-        </svg>
-        my recipe log
-    </h1>
+    <div class="header-content" style="display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto;">
+        <h1>
+            <svg class="hand-icon" viewBox="0 0 24 24">
+                <path d="M5 10c0 4 3 7 7 7s7-3 7-7H5zM19 11h2c1 0 2 1 2 2s-1 2-2 2h-2M4 19h16" stroke-width="1.5" stroke="currentColor" fill="none" stroke-linecap="round"/>
+            </svg>
+            <span id="appTitle">my recipe log</span>
+        </h1>
+        <button id="settingsBtn" class="icon-btn" style="background: none; border: none; padding: 5px; cursor: pointer; color: var(--text-secondary);">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+        </button>
+    </div>
 </header>
 
 <main>
@@ -131,6 +139,35 @@
 
     </div>
 
+</div>
+
+<!-- 設定モーダル -->
+<div id="settingsModal" class="modal">
+    <div class="modal-content">
+        <h2>アプリ設定</h2>
+        
+        <div style="margin-bottom: 20px;">
+            <label for="appNameInput">アプリのタイトル：</label>
+            <input type="text" id="appNameInput" placeholder="例：my recipe log">
+        </div>
+
+        <div style="margin-bottom: 20px;">
+            <h3>データ管理</h3>
+            <p style="font-size: 0.8rem; color: var(--text-secondary); margin-bottom: 10px;">
+                投稿データはブラウザに保存されています。別のデバイスで見たい場合は、書き出したファイルを読み込んでください。
+            </p>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button id="exportBtn" style="background: var(--accent-color);">データをファイルに書き出す</button>
+                <button id="importTriggerBtn" style="background: var(--text-secondary);">ファイルからデータを読み込む</button>
+                <input type="file" id="importFile" style="display: none;" accept=".json">
+                <button id="resetDataBtn" style="background: #fff0f0; color: #dc3545;">すべてのデータをリセット</button>
+            </div>
+        </div>
+
+        <div class="modal-buttons" style="margin-top: 20px;">
+            <button id="closeSettingsBtn" style="width: 100%; background: #f0f0f0; color: var(--text-primary);">閉じる</button>
+        </div>
+    </div>
 </div>
 
 <script src="script.js"></script>

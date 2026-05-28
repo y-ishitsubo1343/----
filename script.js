@@ -32,6 +32,13 @@ try {
     posts = [];
 }
 
+// アプリタイトルの初期化
+const appTitleEl = document.getElementById("appTitle");
+const savedAppTitle = localStorage.getItem("appTitle");
+if (savedAppTitle && appTitleEl) {
+    appTitleEl.textContent = savedAppTitle;
+}
+
 
 // ==========================
 // 編集状態管理
@@ -58,6 +65,16 @@ const editFeedback = getEl("editFeedback");
 const saveEditBtn = getEl("saveEditBtn");
 const deleteEditBtn = getEl("deleteEditBtn");
 const closeModalBtn = getEl("closeModalBtn");
+
+// 設定モーダル
+const settingsModal = getEl("settingsModal");
+const settingsBtn = getEl("settingsBtn");
+const closeSettingsBtn = getEl("closeSettingsBtn");
+const appNameInput = getEl("appNameInput");
+const exportBtn = getEl("exportBtn");
+const importTriggerBtn = getEl("importTriggerBtn");
+const importFile = getEl("importFile");
+const resetDataBtn = getEl("resetDataBtn");
 
 // タブ
 const tabButtons = document.querySelectorAll(".tab-btn");
@@ -323,6 +340,91 @@ if (closeModalBtn) {
     closeModalBtn.addEventListener("click", () => {
         if (modal) modal.style.display = "none";
         editingId = null;
+    });
+}
+
+
+// ==========================
+// 設定モーダル管理
+// ==========================
+if (settingsBtn) {
+    settingsBtn.addEventListener("click", () => {
+        if (settingsModal) {
+            if (appNameInput && appTitleEl) appNameInput.value = appTitleEl.textContent;
+            settingsModal.style.display = "flex";
+        }
+    });
+}
+
+if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener("click", () => {
+        if (appNameInput && appTitleEl) {
+            const newTitle = appNameInput.value || "my recipe log";
+            appTitleEl.textContent = newTitle;
+            localStorage.setItem("appTitle", newTitle);
+        }
+        if (settingsModal) settingsModal.style.display = "none";
+    });
+}
+
+// データ書き出し
+if (exportBtn) {
+    exportBtn.addEventListener("click", () => {
+        const dataStr = JSON.stringify(posts, null, 2);
+        const blob = new Blob([dataStr], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `recipe-log-backup-${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+    });
+}
+
+// データ読み込みトリガー
+if (importTriggerBtn) {
+    importTriggerBtn.addEventListener("click", () => {
+        if (importFile) importFile.click();
+    });
+}
+
+// データ読み込み処理
+if (importFile) {
+    importFile.addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            try {
+                const importedPosts = JSON.parse(event.target.result);
+                if (Array.isArray(importedPosts)) {
+                    if (confirm("データを上書きしますか？現在のデータは消去されます。")) {
+                        posts = importedPosts;
+                        localStorage.setItem("posts", JSON.stringify(posts));
+                        renderPosts();
+                        alert("読み込みが完了しました。");
+                    }
+                } else {
+                    alert("無効なファイル形式です。");
+                }
+            } catch (err) {
+                alert("ファイルの読み込みに失敗しました。");
+            }
+        };
+        reader.readAsText(file);
+    });
+}
+
+// データリセット
+if (resetDataBtn) {
+    resetDataBtn.addEventListener("click", () => {
+        if (confirm("本当にすべての投稿を削除しますか？この操作は取り消せません。")) {
+            posts = [];
+            localStorage.setItem("posts", JSON.stringify(posts));
+            renderPosts();
+            if (settingsModal) settingsModal.style.display = "none";
+        }
     });
 }
 
