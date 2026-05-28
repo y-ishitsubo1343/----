@@ -130,6 +130,7 @@ function renderPosts() {
             const article = document.createElement("article");
             article.innerHTML = `
                 <img src="${post.image}" alt="${post.dishName}">
+                ${post.category ? `<span class="category-tag">${post.category}</span>` : ""}
                 <h4>${post.dishName}</h4>
                 <p>${post.feedback}</p>
                 <p><small>${post.date}</small></p>
@@ -150,6 +151,7 @@ function renderPosts() {
             if (latest) {
                 contentBody.innerHTML = `
                     <img src="${latest.image}" alt="${latest.dishName}" width="100%">
+                    ${latest.category ? `<span class="category-tag">${latest.category}</span>` : ""}
                     <h3><strong class="font-serif">Dish:</strong> ${latest.dishName}</h3>
                     <p><strong class="font-serif">Comment:</strong> ${latest.feedback}</p>
                     <p><small>${latest.date}</small></p>
@@ -230,6 +232,7 @@ function createPost(imageData) {
     const feedbackEl = getEl("feedback");
     const postDateEl = getEl("post-date");
     const submitBtn = getEl("submitBtn");
+    const categoryEl = document.querySelector('input[name="category"]:checked');
 
     if (!dishNameEl || !feedbackEl || !postDateEl) {
         console.error("Form elements not found");
@@ -239,6 +242,7 @@ function createPost(imageData) {
     const dishName = dishNameEl.value;
     const feedback = feedbackEl.value;
     const dateInput = postDateEl.value;
+    const category = categoryEl ? categoryEl.value : "食事";
 
     const date = dateInput || new Date().toISOString().split('T')[0];
 
@@ -247,7 +251,8 @@ function createPost(imageData) {
         image: imageData,
         dishName,
         feedback,
-        date
+        date,
+        category
     };
 
     try {
@@ -258,6 +263,10 @@ function createPost(imageData) {
         
         if (postForm) postForm.reset();
         postDateEl.valueAsDate = new Date();
+        // ファイル名表示のリセット
+        const fileNameDisplay = getEl("file-name");
+        if (fileNameDisplay) fileNameDisplay.textContent = "選択されていません";
+    } catch (e) {
     } catch (e) {
         console.error("Failed to save to localStorage:", e);
         // 容量オーバーの場合の警告
